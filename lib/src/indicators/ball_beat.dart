@@ -9,7 +9,7 @@ class BallBeat extends StatefulWidget {
 }
 
 class _BallBeatState extends State<BallBeat> with TickerProviderStateMixin {
-  static const _BEGIN_TIMES = [350, 0, 350];
+  static const _BEGIN_TIMES = [700, 0, 700];
 
   List<AnimationController> _animationControllers = List(3);
   List<Animation<double>> _scaleAnimations = List(3);
@@ -21,7 +21,7 @@ class _BallBeatState extends State<BallBeat> with TickerProviderStateMixin {
     super.initState();
     for (int i = 0; i < 3; i++) {
       _animationControllers[i] = AnimationController(
-          vsync: this, duration: Duration(milliseconds: 700));
+          vsync: this, duration: Duration(milliseconds: 1400));
       _scaleAnimations[i] = TweenSequence([
         TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.75), weight: 1),
         TweenSequenceItem(tween: Tween(begin: 0.75, end: 1.0), weight: 1),
