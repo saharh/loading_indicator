@@ -11,10 +11,10 @@ class CubeTransition extends StatefulWidget {
 
 class _CubeTransitionState extends State<CubeTransition>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<Size> _translateAnimation;
-  Animation<double> _rotateAnimation;
-  Animation<double> _scaleAnimation;
+  late AnimationController _animationController;
+  late Animation<Size?> _translateAnimation;
+  late Animation<double> _rotateAnimation;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -75,37 +75,34 @@ class _CubeTransitionState extends State<CubeTransition>
         animation: _animationController,
         child: IndicatorShapeWidget(shape: Shape.rectangle),
         builder: (_, child) => Stack(
-              children: [
-                Positioned.fromRect(
-                  rect: Rect.fromLTWH(0, 0, squareSize, squareSize),
-                  child: Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.identity()
-                      ..translate(_translateAnimation.value.width * deltaX,
-                          _translateAnimation.value.height * deltaY)
-                      ..rotateZ(_rotateAnimation.value)
-                      ..scale(_scaleAnimation.value),
-                    child: child,
-                  ),
-                ),
-                Positioned.fromRect(
-                  rect: Rect.fromLTWH(
-                      constraint.maxWidth - squareSize,
-                      constraint.maxHeight - squareSize,
-                      squareSize,
-                      squareSize),
-                  child: Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.identity()
-                      ..translate(-_translateAnimation.value.width * deltaX,
-                          -_translateAnimation.value.height * deltaY)
-                      ..rotateZ(_rotateAnimation.value)
-                      ..scale(_scaleAnimation.value),
-                    child: child,
-                  ),
-                ),
-              ],
+          children: [
+            Positioned.fromRect(
+              rect: Rect.fromLTWH(0, 0, squareSize, squareSize),
+              child: Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.identity()
+                  ..translate(_translateAnimation.value!.width * deltaX,
+                      _translateAnimation.value!.height * deltaY)
+                  ..rotateZ(_rotateAnimation.value)
+                  ..scale(_scaleAnimation.value),
+                child: child,
+              ),
             ),
+            Positioned.fromRect(
+              rect: Rect.fromLTWH(constraint.maxWidth - squareSize,
+                  constraint.maxHeight - squareSize, squareSize, squareSize),
+              child: Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.identity()
+                  ..translate(-_translateAnimation.value!.width * deltaX,
+                      -_translateAnimation.value!.height * deltaY)
+                  ..rotateZ(_rotateAnimation.value)
+                  ..scale(_scaleAnimation.value),
+                child: child,
+              ),
+            ),
+          ],
+        ),
       );
     });
   }

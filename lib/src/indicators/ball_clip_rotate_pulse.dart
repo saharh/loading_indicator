@@ -11,10 +11,10 @@ class BallClipRotatePulse extends StatefulWidget {
 
 class _BallClipRotatePulseState extends State<BallClipRotatePulse>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _outCircleScale;
-  Animation<double> _outCircleRotate;
-  Animation<double> _innerCircle;
+  late AnimationController _animationController;
+  late Animation<double> _outCircleScale;
+  late Animation<double> _outCircleRotate;
+  late Animation<double> _innerCircle;
 
   @override
   void initState() {
@@ -49,22 +49,22 @@ class _BallClipRotatePulseState extends State<BallClipRotatePulse>
     return AnimatedBuilder(
       animation: _animationController,
       builder: (_, child) => Stack(
+        alignment: Alignment.center,
+        fit: StackFit.expand,
+        children: <Widget>[
+          Transform(
             alignment: Alignment.center,
-            fit: StackFit.expand,
-            children: <Widget>[
-              Transform(
-                alignment: Alignment.center,
-                transform: Matrix4.identity()
-                  ..scale(_outCircleScale.value)
-                  ..rotateZ(_outCircleRotate.value),
-                child: IndicatorShapeWidget(shape: Shape.ringTwoHalfVertical),
-              ),
-              Transform.scale(
-                scale: _innerCircle.value * 0.3,
-                child: IndicatorShapeWidget(shape: Shape.circle),
-              ),
-            ],
+            transform: Matrix4.identity()
+              ..scale(_outCircleScale.value)
+              ..rotateZ(_outCircleRotate.value),
+            child: IndicatorShapeWidget(shape: Shape.ringTwoHalfVertical),
           ),
+          Transform.scale(
+            scale: _innerCircle.value * 0.3,
+            child: IndicatorShapeWidget(shape: Shape.circle),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -9,8 +9,8 @@ class BallZigZagDeflect extends StatefulWidget {
 
 class _BallZigZagDeflectState extends State<BallZigZagDeflect>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<Offset> _animation;
+  late AnimationController _animationController;
+  late Animation<Offset> _animation;
 
   @override
   void initState() {
@@ -49,27 +49,27 @@ class _BallZigZagDeflectState extends State<BallZigZagDeflect>
         animation: _animationController,
         child: IndicatorShapeWidget(shape: Shape.circle),
         builder: (_, child) => Stack(
-              children: <Widget>[
-                Positioned.fromRect(
-                  rect: Rect.fromLTWH(deltaX, deltaY, circleSize, circleSize),
-                  child: Transform(
-                    transform: Matrix4.identity()
-                      ..translate(deltaX * _animation.value.dx,
-                          deltaY * _animation.value.dy),
-                    child: child,
-                  ),
-                ),
-                Positioned.fromRect(
-                  rect: Rect.fromLTWH(deltaX, deltaY, circleSize, circleSize),
-                  child: Transform(
-                    transform: Matrix4.identity()
-                      ..translate(deltaX * -_animation.value.dx,
-                          deltaY * -_animation.value.dy),
-                    child: child,
-                  ),
-                )
-              ],
+          children: <Widget>[
+            Positioned.fromRect(
+              rect: Rect.fromLTWH(deltaX, deltaY, circleSize, circleSize),
+              child: Transform(
+                transform: Matrix4.identity()
+                  ..translate(deltaX * _animation.value.dx,
+                      deltaY * _animation.value.dy),
+                child: child,
+              ),
             ),
+            Positioned.fromRect(
+              rect: Rect.fromLTWH(deltaX, deltaY, circleSize, circleSize),
+              child: Transform(
+                transform: Matrix4.identity()
+                  ..translate(deltaX * -_animation.value.dx,
+                      deltaY * -_animation.value.dy),
+                child: child,
+              ),
+            )
+          ],
+        ),
       );
     });
   }

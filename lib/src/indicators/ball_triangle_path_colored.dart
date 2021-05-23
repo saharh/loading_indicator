@@ -2,17 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/src/shape/indicator_painter.dart';
 
 /// BallTrianglePath.
-class BallTrianglePath extends StatefulWidget {
+class BallTrianglePathColored extends StatefulWidget {
+  final bool isFilled;
+
+  const BallTrianglePathColored({Key? key, this.isFilled = false})
+      : super(key: key);
+
   @override
-  _BallTrianglePathState createState() => _BallTrianglePathState();
+  _BallTrianglePathColoredState createState() =>
+      _BallTrianglePathColoredState();
 }
 
-class _BallTrianglePathState extends State<BallTrianglePath>
+class _BallTrianglePathColoredState extends State<BallTrianglePathColored>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<Offset> _topCenterAnimation;
-  late Animation<Offset> _leftBottomAnimation;
-  late Animation<Offset> _rightBottomAnimation;
+  Animation<Offset>? _topCenterAnimation;
+  Animation<Offset>? _leftBottomAnimation;
+  Animation<Offset>? _rightBottomAnimation;
 
   @override
   void initState() {
@@ -70,19 +76,20 @@ class _BallTrianglePathState extends State<BallTrianglePath>
         widgets[0] = Positioned.fromRect(
           rect: Rect.fromLTWH(constraint.maxWidth / 2 - circleSize / 2, 0,
               circleSize, circleSize),
-          child: _buildAnimatedRing(container, circleSize, _topCenterAnimation),
+          child:
+              _buildAnimatedRing(container, circleSize, _topCenterAnimation, 0),
         );
         widgets[1] = Positioned.fromRect(
           rect: Rect.fromLTWH(
               0, constraint.maxHeight - circleSize, circleSize, circleSize),
-          child:
-              _buildAnimatedRing(container, circleSize, _leftBottomAnimation),
+          child: _buildAnimatedRing(
+              container, circleSize, _leftBottomAnimation, 1),
         );
         widgets[2] = Positioned.fromRect(
           rect: Rect.fromLTWH(constraint.maxWidth - circleSize,
               constraint.maxHeight - circleSize, circleSize, circleSize),
-          child:
-              _buildAnimatedRing(container, circleSize, _rightBottomAnimation),
+          child: _buildAnimatedRing(
+              container, circleSize, _rightBottomAnimation, 2),
         );
 
         return Stack(children: widgets);
@@ -91,20 +98,23 @@ class _BallTrianglePathState extends State<BallTrianglePath>
   }
 
   _buildAnimatedRing(
-      Size size, double circleSize, Animation<Offset> animation) {
+      Size size, double circleSize, Animation<Offset>? animation, int index) {
     return AnimatedBuilder(
       animation: _animationController,
       builder: (_, child) {
         return Transform(
           transform: Matrix4.identity()
             ..translate(
-              animation.value.dx * (size.width - circleSize),
+              animation!.value.dx * (size.width - circleSize),
               animation.value.dy * (size.height - circleSize),
             ),
           child: child,
         );
       },
-      child: IndicatorShapeWidget(shape: Shape.ring),
+      child: IndicatorShapeWidget(
+        shape: widget.isFilled ? Shape.circle : Shape.ring,
+        colorIndex: index,
+      ),
     );
   }
 }
