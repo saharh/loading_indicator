@@ -22,51 +22,21 @@ enum Shape {
 class IndicatorShapeWidget extends StatelessWidget {
   final Shape shape;
   final double? data;
-  final int? colorIndex;
 
-  IndicatorShapeWidget({
+  /// The index of shape in the widget.
+  final int index;
+
+  const IndicatorShapeWidget({
     Key? key,
     required this.shape,
     this.data,
-    this.colorIndex,
+    this.index = 0,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final DecorateData decorateData = DecorateContext.of(context)!.decorateData;
-    final bool shouldUseColors = decorateData.colors != null &&
-        colorIndex != null &&
-        colorIndex! < decorateData.colors!.length;
-    final color = shouldUseColors
-        ? decorateData.colors![colorIndex!]
-        : DecorateContext.of(context)!.decorateData.color;
-
-//    if (shape == Shape.circle) {
-//      return Container(
-//        decoration: BoxDecoration(
-//          color: color,
-//          shape: BoxShape.circle,
-//        ),
-//      );
-//    } else if (shape == Shape.line) {
-//      return LayoutBuilder(
-//        builder: (ctx, constraint) => Container(
-//              decoration: ShapeDecoration(
-//                color: color,
-//                shape: RoundedRectangleBorder(
-//                  borderRadius: BorderRadius.circular(constraint.maxWidth / 2),
-//                ),
-//              ),
-//            ),
-//      );
-//    } else if (shape == Shape.rectangle) {
-//      return Container(
-//        decoration: BoxDecoration(
-//          color: color,
-//          shape: BoxShape.rectangle,
-//        ),
-//      );
-//    }
+    final color = decorateData.colors[index % decorateData.colors.length];
 
     return Container(
       constraints: const BoxConstraints(
@@ -74,7 +44,13 @@ class IndicatorShapeWidget extends StatelessWidget {
         minHeight: _kMinIndicatorSize,
       ),
       child: CustomPaint(
-        painter: _ShapePainter(color, shape, data: data),
+        painter: _ShapePainter(
+          color,
+          shape,
+          data,
+          decorateData.strokeWidth,
+          pathColor: decorateData.pathBackgroundColor,
+        ),
       ),
     );
   }
@@ -85,11 +61,16 @@ class _ShapePainter extends CustomPainter {
   final Shape shape;
   final Paint _paint;
   final double? data;
+  final double strokeWidth;
+  final Color? pathColor;
 
-  static const double _strokeWidth = 2.0;
-
-  _ShapePainter(this.color, this.shape, {this.data})
-      : _paint = Paint()..isAntiAlias = true,
+  _ShapePainter(
+    this.color,
+    this.shape,
+    this.data,
+    this.strokeWidth, {
+    this.pathColor,
+  })  : _paint = Paint()..isAntiAlias = true,
         super();
 
   @override
@@ -106,18 +87,31 @@ class _ShapePainter extends CustomPainter {
         );
         break;
       case Shape.ringThirdFour:
+        if (pathColor != null) {
+          _paint
+            ..color = pathColor!
+            ..strokeWidth = strokeWidth
+            ..style = PaintingStyle.stroke;
+          canvas.drawCircle(
+            Offset(size.width / 2, size.height / 2),
+            size.shortestSide / 2,
+            _paint,
+          );
+        }
         _paint
           ..color = color
           ..style = PaintingStyle.stroke
-          ..strokeWidth = _strokeWidth;
+          ..strokeWidth = strokeWidth;
         canvas.drawArc(
-            Rect.fromCircle(
-                center: Offset(size.width / 2, size.height / 2),
-                radius: size.shortestSide / 2),
-            -3 * pi / 4,
-            3 * pi / 2,
-            false,
-            _paint);
+          Rect.fromCircle(
+            center: Offset(size.width / 2, size.height / 2),
+            radius: size.shortestSide / 2,
+          ),
+          -3 * pi / 4,
+          3 * pi / 2,
+          false,
+          _paint,
+        );
         break;
       case Shape.rectangle:
         _paint
@@ -128,7 +122,7 @@ class _ShapePainter extends CustomPainter {
       case Shape.ringTwoHalfVertical:
         _paint
           ..color = color
-          ..strokeWidth = _strokeWidth
+          ..strokeWidth = strokeWidth
           ..style = PaintingStyle.stroke;
         final rect = Rect.fromLTWH(
             size.width / 4, size.height / 4, size.width / 2, size.height / 2);
@@ -138,7 +132,7 @@ class _ShapePainter extends CustomPainter {
       case Shape.ring:
         _paint
           ..color = color
-          ..strokeWidth = _strokeWidth
+          ..strokeWidth = strokeWidth
           ..style = PaintingStyle.stroke;
         canvas.drawCircle(Offset(size.width / 2, size.height / 2),
             size.shortestSide / 2, _paint);
@@ -184,7 +178,9 @@ class _ShapePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_ShapePainter oldDelegate) =>
-      this.shape != oldDelegate.shape ||
-      this.color != oldDelegate.color ||
-      this.data != oldDelegate.data;
+      shape != oldDelegate.shape ||
+      color != oldDelegate.color ||
+      data != oldDelegate.data ||
+      strokeWidth != oldDelegate.strokeWidth ||
+      pathColor != oldDelegate.pathColor;
 }

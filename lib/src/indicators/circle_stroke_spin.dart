@@ -3,14 +3,16 @@ import 'package:loading_indicator/src/decorate/decorate.dart';
 
 /// CircleStrokeSpin.
 class CircleStrokeSpin extends StatelessWidget {
+  const CircleStrokeSpin({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final color = DecorateContext.of(context)!.decorateData.color;
-    return Theme(
-      data: Theme.of(context).copyWith(accentColor: color),
-      child: CircularProgressIndicator(
-        strokeWidth: 2,
-      ),
+    final color = DecorateContext.of(context)!.decorateData.colors.first;
+    return CircularProgressIndicator(
+      strokeWidth: 2,
+      color: color,
+      backgroundColor:
+          DecorateContext.of(context)!.decorateData.pathBackgroundColor,
     );
   }
 }

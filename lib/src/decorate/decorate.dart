@@ -1,32 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
+const double _kDefaultStrokeWidth = 2;
+
 /// Information about a piece of animation (e.g., color).
 @immutable
 class DecorateData {
-  final Color color;
+  final Color? backgroundColor;
   final Indicator indicator;
-  final List<Color>? colors;
 
-  const DecorateData(
-      {required this.indicator, this.color = Colors.white, this.colors});
+  /// It will promise at least one value in the collection.
+  final List<Color> colors;
+  final double? _strokeWidth;
+
+  /// Applicable to which has cut edge of the shape
+  final Color? pathBackgroundColor;
+
+  const DecorateData({
+    required this.indicator,
+    required this.colors,
+    this.backgroundColor,
+    double? strokeWidth,
+    this.pathBackgroundColor,
+  })  : _strokeWidth = strokeWidth,
+        assert(colors.length > 0);
+
+  double get strokeWidth => _strokeWidth ?? _kDefaultStrokeWidth;
 
   @override
-  bool operator ==(other) {
-    if (other.runtimeType != this.runtimeType) return false;
-
-    return other is DecorateData &&
-        this.color == other.color &&
-        this.colors == other.colors &&
-        this.indicator == other.indicator;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DecorateData &&
+          runtimeType == other.runtimeType &&
+          backgroundColor == other.backgroundColor &&
+          indicator == other.indicator &&
+          colors == other.colors &&
+          strokeWidth == other.strokeWidth;
 
   @override
-  int get hashCode => hashValues(color, indicator);
+  int get hashCode =>
+      backgroundColor.hashCode ^
+      indicator.hashCode ^
+      colors.hashCode ^
+      strokeWidth.hashCode;
 
   @override
   String toString() {
-    return 'DecorateData{color: $color, indicator: $indicator}';
+    return 'DecorateData{backgroundColor: $backgroundColor, indicator: $indicator, colors: $colors, strokeWidth: $strokeWidth}';
   }
 }
 
@@ -34,7 +54,7 @@ class DecorateData {
 class DecorateContext extends InheritedWidget {
   final DecorateData decorateData;
 
-  DecorateContext({
+  const DecorateContext({
     Key? key,
     required this.decorateData,
     required Widget child,
@@ -42,7 +62,7 @@ class DecorateContext extends InheritedWidget {
 
   @override
   bool updateShouldNotify(DecorateContext oldWidget) =>
-      oldWidget.decorateData == this.decorateData;
+      oldWidget.decorateData == decorateData;
 
   static DecorateContext? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType();

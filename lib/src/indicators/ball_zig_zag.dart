@@ -3,6 +3,8 @@ import 'package:loading_indicator/src/shape/indicator_painter.dart';
 
 /// BallZigZag.
 class BallZigZag extends StatefulWidget {
+  const BallZigZag({Key? key}) : super(key: key);
+
   @override
   _BallZigZagState createState() => _BallZigZagState();
 }
@@ -21,11 +23,14 @@ class _BallZigZagState extends State<BallZigZag>
 
     _animation = TweenSequence([
       TweenSequenceItem(
-          tween: Tween(begin: Offset(0, 0), end: Offset(-1, -1)), weight: 1),
+          tween: Tween(begin: const Offset(0, 0), end: const Offset(-1, -1)),
+          weight: 1),
       TweenSequenceItem(
-          tween: Tween(begin: Offset(-1, -1), end: Offset(1, -1)), weight: 1),
+          tween: Tween(begin: const Offset(-1, -1), end: const Offset(1, -1)),
+          weight: 1),
       TweenSequenceItem(
-          tween: Tween(begin: Offset(1, -1), end: Offset(0, 0)), weight: 1),
+          tween: Tween(begin: const Offset(1, -1), end: const Offset(0, 0)),
+          weight: 1),
     ]).animate(
         CurvedAnimation(parent: _animationController, curve: Curves.linear));
 
@@ -47,7 +52,6 @@ class _BallZigZagState extends State<BallZigZag>
 
       return AnimatedBuilder(
         animation: _animationController,
-        child: IndicatorShapeWidget(shape: Shape.circle),
         builder: (_, child) {
           return Stack(
             children: <Widget>[
@@ -57,7 +61,10 @@ class _BallZigZagState extends State<BallZigZag>
                   transform: Matrix4.identity()
                     ..translate(deltaX * _animation.value.dx,
                         deltaY * _animation.value.dy),
-                  child: child,
+                  child: const IndicatorShapeWidget(
+                    shape: Shape.circle,
+                    index: 0,
+                  ),
                 ),
               ),
               Positioned.fromRect(
@@ -66,7 +73,10 @@ class _BallZigZagState extends State<BallZigZag>
                   transform: Matrix4.identity()
                     ..translate(deltaX * -_animation.value.dx,
                         deltaY * -_animation.value.dy),
-                  child: child,
+                  child: const IndicatorShapeWidget(
+                    shape: Shape.circle,
+                    index: 1,
+                  ),
                 ),
               )
             ],

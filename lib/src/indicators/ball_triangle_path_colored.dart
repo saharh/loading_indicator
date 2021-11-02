@@ -28,31 +28,40 @@ class _BallTrianglePathColoredState extends State<BallTrianglePathColored>
 
     _topCenterAnimation = TweenSequence([
       TweenSequenceItem(
-          tween: Tween(begin: Offset(0, 0), end: Offset(0.5, 1)), weight: 1),
+          tween: Tween(begin: const Offset(0, 0), end: const Offset(0.5, 1)),
+          weight: 1),
       TweenSequenceItem(
-          tween: Tween(begin: Offset(0.5, 1), end: Offset(-0.5, 1)), weight: 1),
+          tween: Tween(begin: const Offset(0.5, 1), end: const Offset(-0.5, 1)),
+          weight: 1),
       TweenSequenceItem(
-          tween: Tween(begin: Offset(-0.5, 1), end: Offset(0, 0)), weight: 1),
+          tween: Tween(begin: const Offset(-0.5, 1), end: const Offset(0, 0)),
+          weight: 1),
     ]).animate(
         CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     _leftBottomAnimation = TweenSequence([
       TweenSequenceItem(
-          tween: Tween(begin: Offset(0, 0), end: Offset(0.5, -1)), weight: 1),
+          tween: Tween(begin: const Offset(0, 0), end: const Offset(0.5, -1)),
+          weight: 1),
       TweenSequenceItem(
-          tween: Tween(begin: Offset(0.5, -1), end: Offset(1, 0)), weight: 1),
+          tween: Tween(begin: const Offset(0.5, -1), end: const Offset(1, 0)),
+          weight: 1),
       TweenSequenceItem(
-          tween: Tween(begin: Offset(1, 0), end: Offset(0, 0)), weight: 1),
+          tween: Tween(begin: const Offset(1, 0), end: const Offset(0, 0)),
+          weight: 1),
     ]).animate(
         CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     _rightBottomAnimation = TweenSequence([
       TweenSequenceItem(
-          tween: Tween(begin: Offset(0, 0), end: Offset(-1, 0)), weight: 1),
+          tween: Tween(begin: const Offset(0, 0), end: const Offset(-1, 0)),
+          weight: 1),
       TweenSequenceItem(
-          tween: Tween(begin: Offset(-1, 0), end: Offset(-0.5, -1)), weight: 1),
+          tween: Tween(begin: const Offset(-1, 0), end: const Offset(-0.5, -1)),
+          weight: 1),
       TweenSequenceItem(
-          tween: Tween(begin: Offset(-0.5, -1), end: Offset(0, 0)), weight: 1),
+          tween: Tween(begin: const Offset(-0.5, -1), end: const Offset(0, 0)),
+          weight: 1),
     ]).animate(
         CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
@@ -113,7 +122,7 @@ class _BallTrianglePathColoredState extends State<BallTrianglePathColored>
       },
       child: IndicatorShapeWidget(
         shape: widget.isFilled ? Shape.circle : Shape.ring,
-        colorIndex: index,
+        index: index,
       ),
     );
   }
